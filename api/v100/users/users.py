@@ -1,22 +1,25 @@
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, status
+from sqlmodel import Session
 
 from api.v100.schemas.users import UserRead, UserCreate, UserUpdate
+from db.database import get_session
 from db.repositories.users import UsersRepository
 
 router = APIRouter()
 
 
 @router.get(
-    "/",
+    "",
     status_code=status.HTTP_200_OK,
     response_model=list[UserRead],
 )
-async def users(
+async def list(
         repository: UsersRepository = Depends(UsersRepository),
+        session: Session = Depends(get_session),
 ):
-    return repository.list()
+    return repository.list(db=session)
 
 
 @router.get(
@@ -24,23 +27,25 @@ async def users(
     status_code=status.HTTP_200_OK,
     response_model=UserRead,
 )
-async def user(
+async def get_one(
         id: UUID,
         repository: UsersRepository = Depends(UsersRepository),
+        session: Session = Depends(get_session),
 ):
-    return repository.get_one(id)
+    return repository.get_one(db=session, id=id)
 
 
 @router.post(
-    "/",
+    "",
     status_code=status.HTTP_201_CREATED,
     response_model=UserRead,
 )
-async def create_user(
+async def create(
         user: UserCreate,
         repository: UsersRepository = Depends(UsersRepository),
+        session: Session = Depends(get_session),
 ):
-    return repository.create(user)
+    return repository.create(db=session, user=user)
 
 
 @router.put(
@@ -48,20 +53,22 @@ async def create_user(
     status_code=status.HTTP_200_OK,
     response_model=UserRead,
 )
-async def update_user(
+async def update(
         id: UUID,
         user: UserUpdate,
         repository: UsersRepository = Depends(UsersRepository),
+        session: Session = Depends(get_session),
 ):
-    return repository.update(id, user)
+    return repository.update(db=session, id=id, user=user)
 
 
 @router.delete(
     "/{id}",
     status_code=status.HTTP_204_NO_CONTENT,
 )
-async def delete_user(
+async def delete(
         id: UUID,
         repository: UsersRepository = Depends(UsersRepository),
+        session: Session = Depends(get_session),
 ):
-    return repository.delete(id)
+    return repository.delete(db=session, id=id)

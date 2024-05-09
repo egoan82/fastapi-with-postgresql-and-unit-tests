@@ -12,6 +12,8 @@ uvicorn = "^0.29.0"
 pydantic = {extras = ["email"], version = "^2.7.1"}
 psycopg2-binary = "^2.9.9"
 sqlmodel = "^0.0.18"
+faker = "^25.1.0"
+pytest = "^8.2.0"
 
 
 [build-system]
