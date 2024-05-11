@@ -1,11 +1,16 @@
 from typing import Optional
-from uuid import uuid4
+import uuid
 
 from sqlmodel import SQLModel, Field
 
 
 class User(SQLModel, table=True):
-    id: str = Field(primary_key=True, default_factory=uuid4, index=True)
+    id: uuid.UUID = Field(
+        default=uuid.uuid4(),
+        primary_key=True,
+        index=True,
+        nullable=False,
+    )
     name: str
     first_last_name: str
     second_last_name: Optional[str] = None
